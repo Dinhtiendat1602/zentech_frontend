@@ -1,0 +1,141 @@
+.page { width:min(1180px,calc(100% - 48px)); margin:0 auto; padding:38px 0 70px; color:#f1f4ee; }
+.heading { margin-bottom:22px; } .eyebrow { color:#c8ee8b; font-size:9px; font-weight:700; letter-spacing:1.3px; } .heading h1 { margin:5px 0; font:600 clamp(29px,4vw,39px)/1.1 'Space Grotesk',sans-serif; } .heading p { margin:0; color:#929a91; font-size:12px; }
+.layout { display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:28px; align-items:start; } .form { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; } .form h2 { grid-column:1/-1; margin:0; padding-bottom:10px; border-bottom:1px solid #2d342e; font:600 17px 'Space Grotesk',sans-serif; } .field { display:flex; flex-direction:column; gap:5px; } .wide { grid-column:1/-1; } .field label { color:#c8d0c4; font-size:10px; } .field input,.field select,.field textarea { width:100%; min-height:40px; padding:9px 10px; border:1px solid #353d36; border-radius:2px; outline:0; background:#101411; color:#eff2ec; font:12px 'DM Sans',sans-serif; } .field textarea { min-height:76px; resize:vertical; } .field input:focus,.field select:focus,.field textarea:focus { border-color:#a8f000; } .submit { grid-column:1/-1; display:flex; min-height:43px; align-items:center; justify-content:center; gap:9px; border:0; background:#a8f000; color:#10140b; font-size:10px; font-weight:700; cursor:pointer; transition:background 0.2s; } .submit:hover { background:#b7fa14; } .submit:disabled { opacity:0.6; cursor:not-allowed; } .note { grid-column:1/-1; margin:0; color:#929a91; font-size:10px; }
+.summary { padding:20px; border:1px solid #2d342e; border-radius:4px; background:#111512; } .summary h2 { margin:0 0 13px; font:600 17px 'Space Grotesk',sans-serif; } .item { display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid #262e27; color:#b7beb3; font-size:11px; } .item span:last-child { color:#eef2eb; white-space:nowrap; } .line { display:flex; justify-content:space-between; gap:12px; padding:10px 0 0; color:#aeb6ab; font-size:11px; } .total { display:flex; justify-content:space-between; margin-top:12px; border-top:1px solid #303831; padding:14px 0 0; font-size:13px; } .total strong { color:#d9f5ae; font:700 16px 'Space Grotesk',sans-serif; }
+
+/* Coupon / Voucher Section */
+.couponSection { margin: 16px 0; padding: 14px 0; border-top: 1px dashed #2d342e; border-bottom: 1px dashed #2d342e; }
+.couponLabel { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #c8d0c4; margin-bottom: 8px; letter-spacing: 0.5px; }
+.couponLabel i { color: #a8f000; font-size: 11px; }
+.couponInputRow { display: flex; gap: 6px; }
+.couponInput { flex: 1; min-height: 38px; padding: 0 10px; border: 1px solid #353d36; border-radius: 3px; background: #0c100d; color: #eff2ec; font: 600 12px 'Space Grotesk', monospace; text-transform: uppercase; letter-spacing: 0.8px; outline: none; }
+.couponInput:focus { border-color: #a8f000; }
+.couponButton { min-height: 38px; padding: 0 14px; border: 0; border-radius: 3px; background: #a8f000; color: #10140b; font-size: 10px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.couponButton:hover:not(:disabled) { background: #b8fa19; }
+.couponButton:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.couponError { display: flex; align-items: flex-start; gap: 7px; margin-top: 8px; padding: 8px 10px; border: 1px solid #5c2828; border-radius: 3px; background: #221010; color: #ff9b9b; font-size: 11px; line-height: 1.4; }
+.couponError i { color: #ff6b6b; margin-top: 2px; flex-shrink: 0; }
+
+.couponAppliedCard { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border: 1px solid #2f4e24; border-radius: 3px; background: #132210; margin-top: 8px; }
+.couponAppliedInfo { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.couponAppliedIcon { color: #a8f000; font-size: 13px; flex-shrink: 0; }
+.couponAppliedText { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.couponAppliedCode { font: 700 11px 'Space Grotesk', monospace; color: #c8ee8b; letter-spacing: 0.5px; }
+.couponAppliedName { font-size: 10px; color: #9bb094; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.couponRemoveBtn { border: 0; background: transparent; color: #8da487; font-size: 10px; cursor: pointer; padding: 4px; text-decoration: underline; flex-shrink: 0; transition: color 0.15s; }
+.couponRemoveBtn:hover { color: #ff9b9b; }
+
+.discountLine { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0 0; color: #a8f000; font-size: 11px; font-weight: 600; }
+.discountLine span:last-child { color: #a8f000; }
+
+/* Payment Methods & VietQR Section */
+.paymentSection { grid-column: 1 / -1; margin-top: 6px; display: flex; flex-direction: column; gap: 12px; }
+.paymentSection h3 { margin: 0; font: 600 15px 'Space Grotesk', sans-serif; color: #eef2eb; }
+.paymentOptions { display: flex; flex-direction: column; gap: 10px; }
+.paymentOption { display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px; border: 1.5px solid #2d342e; border-radius: 6px; background: #111512; cursor: pointer; transition: all 0.2s ease; }
+.paymentOption:hover { border-color: #4b584a; }
+.paymentOptionActive { border-color: #a8f000 !important; background: #141d13 !important; box-shadow: 0 0 0 1px rgba(168, 240, 0, 0.2); }
+.paymentOption input[type="radio"] { accent-color: #a8f000; margin-top: 3px; width: 16px; height: 16px; cursor: pointer; }
+.paymentOptionContent { flex: 1; }
+.paymentOptionTitle { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
+.paymentOptionTitle span:first-child { color: #a8f000; font-size: 14px; }
+.paymentOptionTitle strong { font-size: 13px; color: #f1f4ee; }
+.recommendBadge { padding: 2px 7px; background: #a8f000; color: #10140b; font-size: 9px; font-weight: 700; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.paymentOptionContent p { margin: 0; font-size: 11px; color: #8f988c; line-height: 1.4; }
+
+.qrBox { margin-top: 6px; padding: 18px; border: 1.5px solid #304a27; border-radius: 8px; background: #0f1711; animation: qrFade .2s ease; }
+@keyframes qrFade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.qrHeader { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #c8ee8b; margin-bottom: 14px; font-weight: 600; }
+.qrHeader span:first-child { color: #a8f000; }
+.qrContent { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.qrImageWrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; background: #ffffff; padding: 10px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
+.qrImage { width: 160px; height: 160px; object-fit: contain; }
+.qrScanHint { color: #24602f; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+.qrDetails { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 8px; }
+.qrDetailRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 11px; background: #141c15; border: 1px solid #253325; border-radius: 4px; font-size: 11.5px; }
+.qrDetailRow span { color: #8c9789; font-size: 11px; }
+.qrDetailRow strong { color: #f1f4ee; font-family: 'Space Grotesk', monospace; font-size: 12px; }
+.transferMemo { color: #a8f000 !important; font-weight: 700; letter-spacing: 0.5px; }
+.copyBtn { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border: 1px solid #3d4f3b; border-radius: 3px; background: #1a251a; color: #a8f000; font-size: 10px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.copyBtn:hover { border-color: #a8f000; background: #223321; }
+
+.done { padding:42px 24px; border:1px solid #34442b; border-radius: 4px; background:#111710; text-align:center; } .done i { color:#a8f000; font-size:36px; } .done h2 { margin:14px 0 6px; font:600 22px 'Space Grotesk',sans-serif; } .done p { color:#abb4a7; font-size:12px; max-width: 520px; margin: 0 auto 16px; } .done a { display: inline-block; padding: 9px 18px; background: #a8f000; color: #10140b; font-weight: 700; text-decoration: none; border-radius: 3px; font-size:11px; }
+.orderCodeBadge { display: inline-block; padding: 4px 12px; margin: 8px 0 14px; background: #1c2b18; border: 1px solid #3d602e; border-radius: 3px; color: #c8ee8b; font: 700 13px 'Space Grotesk', monospace; }
+
+.doneQrCard { max-width: 480px; margin: 18px auto; padding: 18px; border: 1px solid #3d602e; border-radius: 6px; background: #151f14; text-align: left; }
+.doneQrCard h3 { margin: 0 0 6px; font-size: 13px; color: #c8ee8b; display: flex; align-items: center; gap: 7px; }
+.doneQrCard p { margin: 0 0 12px; font-size: 11px; color: #9bb094; }
+.doneQrBody { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.doneQrImg { width: 130px; height: 130px; background: #fff; padding: 6px; border-radius: 6px; object-fit: contain; }
+.doneQrInfo { flex: 1; display: flex; flex-direction: column; gap: 6px; font-size: 11px; }
+.doneQrInfo div { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #283a25; }
+.doneQrInfo div span { color: #8d9e88; }
+.doneQrInfo div strong { color: #f1f4ee; font-family: 'Space Grotesk', monospace; }
+
+.addressGrid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.selectWrapper { position: relative; display: flex; align-items: center; }
+.selectWrapper select { cursor: pointer; }
+.selectWrapper select:disabled { opacity: 0.55; cursor: not-allowed; background-color: #0b0f0c; }
+.loadingBadge { color: #a8f000; font-size: 9px; margin-left: 6px; font-weight: 500; }
+
+@media(max-width:760px) { .page { width:calc(100% - 32px); padding-top:26px; } .layout { grid-template-columns:1fr; gap:20px; } .form { gap:11px; } .addressGrid { grid-template-columns: 1fr; } .qrContent { flex-direction: column; } .qrImageWrapper { width: 100%; } .qrDetails { width: 100%; min-width: 0; } }
+@media(max-width:420px) { .form { grid-template-columns:1fr; } .form h2,.wide,.submit,.note { grid-column:1; } }
+
+/* Light theme overrides */
+:global(html[data-theme="light"]) .page { color:#172016; }
+:global(html[data-theme="light"]) .heading p,:global(html[data-theme="light"]) .note { color:#667064; }
+:global(html[data-theme="light"]) .form h2 { border-color:#d9dfd4; color:#20291e; }
+:global(html[data-theme="light"]) .field label { color:#465044; }
+:global(html[data-theme="light"]) .field input,:global(html[data-theme="light"]) .field select,:global(html[data-theme="light"]) .field textarea { border-color:#d2d9ce; background:#fff; color:#20291e; }
+:global(html[data-theme="light"]) .summary { border-color:#d9dfd4; background:#fff; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+:global(html[data-theme="light"]) .summary h2 { color:#20291e; }
+:global(html[data-theme="light"]) .item { border-color:#e1e5de; color:#596454; }
+:global(html[data-theme="light"]) .item span:last-child { color:#20291e; }
+:global(html[data-theme="light"]) .line { color:#596454; }
+:global(html[data-theme="light"]) .total { border-color:#d9dfd4; color:#263126; }
+:global(html[data-theme="light"]) .total strong { color:#1e4822; }
+:global(html[data-theme="light"]) .eyebrow,:global(html[data-theme="light"]) .done i { color:#2b6833; }
+:global(html[data-theme="light"]) .done a { background:#24602f; color:#fff; }
+:global(html[data-theme="light"]) .submit { background:#24602f; color:#fff; }
+:global(html[data-theme="light"]) .submit:hover { background:#2d7438; }
+
+:global(html[data-theme="light"]) .couponSection { border-color: #dbe2d8; }
+:global(html[data-theme="light"]) .couponLabel { color: #354238; }
+:global(html[data-theme="light"]) .couponLabel i { color: #24602f; }
+:global(html[data-theme="light"]) .couponInput { border-color: #ced6cb; background: #f9fbf9; color: #172016; }
+:global(html[data-theme="light"]) .couponButton { background: #24602f; color: #fff; }
+:global(html[data-theme="light"]) .couponButton:hover:not(:disabled) { background: #2e753a; }
+:global(html[data-theme="light"]) .couponError { border-color: #f7c3c3; background: #fff5f5; color: #b82828; }
+:global(html[data-theme="light"]) .couponError i { color: #c42b2b; }
+:global(html[data-theme="light"]) .couponAppliedCard { border-color: #badbb6; background: #f0f8ef; }
+:global(html[data-theme="light"]) .couponAppliedIcon { color: #24602f; }
+:global(html[data-theme="light"]) .couponAppliedCode { color: #1e5427; }
+:global(html[data-theme="light"]) .couponAppliedName { color: #4e6651; }
+:global(html[data-theme="light"]) .couponRemoveBtn { color: #5a745d; }
+:global(html[data-theme="light"]) .couponRemoveBtn:hover { color: #b82828; }
+:global(html[data-theme="light"]) .discountLine { color: #24602f; }
+:global(html[data-theme="light"]) .discountLine span:last-child { color: #24602f; }
+:global(html[data-theme="light"]) .orderCodeBadge { background: #eaf5e8; border-color: #b7dcb1; color: #1f5027; }
+:global(html[data-theme="light"]) .done { border-color: #cfdccd; background: #fafcfa; }
+
+:global(html[data-theme="light"]) .paymentSection h3 { color: #20291e; }
+:global(html[data-theme="light"]) .paymentOption { border-color: #d2d9ce; background: #fff; }
+:global(html[data-theme="light"]) .paymentOptionTitle strong { color: #20291e; }
+:global(html[data-theme="light"]) .paymentOptionActive { border-color: #24602f !important; background: #f3f9f2 !important; box-shadow: 0 0 0 1px rgba(36, 96, 47, 0.2); }
+:global(html[data-theme="light"]) .recommendBadge { background: #24602f; color: #fff; }
+:global(html[data-theme="light"]) .paymentOptionContent p { color: #667064; }
+:global(html[data-theme="light"]) .qrBox { border-color: #badbb6; background: #f7fbf6; }
+:global(html[data-theme="light"]) .qrHeader { color: #1e5427; }
+:global(html[data-theme="light"]) .qrDetailRow { background: #fff; border-color: #d9e5d7; }
+:global(html[data-theme="light"]) .qrDetailRow strong { color: #172016; }
+:global(html[data-theme="light"]) .transferMemo { color: #1e5427 !important; }
+:global(html[data-theme="light"]) .copyBtn { border-color: #badbb6; background: #f0f7ef; color: #1e5427; }
+:global(html[data-theme="light"]) .copyBtn:hover { border-color: #1e5427; background: #e3f2e1; }
+:global(html[data-theme="light"]) .doneQrCard { background: #f5f9f4; border-color: #badbb6; }
+:global(html[data-theme="light"]) .doneQrCard h3 { color: #1e5427; }
+:global(html[data-theme="light"]) .doneQrCard p { color: #4e6651; }
+:global(html[data-theme="light"]) .doneQrInfo div { border-bottom-color: #dbe8da; }
+:global(html[data-theme="light"]) .doneQrInfo div strong { color: #172016; }
+:global(html[data-theme="light"]) .selectWrapper select:disabled { background-color: #f1f4ed; }
+:global(html[data-theme="light"]) .loadingBadge { color: #2d6b35; }

@@ -1,0 +1,488 @@
+.uploadDropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 14px;
+  border: 2px dashed #3a473d;
+  border-radius: 6px;
+  background: #141a15;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  position: relative;
+  outline: none;
+}
+
+.uploadDropzone:hover,
+.uploadDropzone.dragging {
+  border-color: #a8f000;
+  background: #19231b;
+}
+
+.uploadDropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.uploadIcon {
+  font-size: 26px;
+  color: #a8f000;
+  margin-bottom: 2px;
+}
+
+.uploadTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #eff2ec;
+}
+
+.uploadSubtitle {
+  font-size: 10px;
+  color: #8c988e;
+}
+
+.previewContainer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid #313d33;
+  border-radius: 6px;
+  background: #131814;
+}
+
+.previewImage {
+  width: 68px;
+  height: 68px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid #3c4b3f;
+  background: #000;
+  flex-shrink: 0;
+}
+
+.previewDetails {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.previewName {
+  font-size: 11px;
+  font-weight: 600;
+  color: #e6ede6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.previewMeta {
+  font-size: 10px;
+  color: #8fa092;
+}
+
+.previewActions {
+  display: flex;
+  gap: 6px;
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  font-size: 10px;
+  border-radius: 4px;
+  border: 1px solid #3c4b3f;
+  background: #1b241d;
+  color: #d8e2d8;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.actionBtn:hover {
+  background: #253328;
+  color: #fff;
+}
+
+.actionBtnDanger {
+  border-color: #5a2e2e;
+  background: #291515;
+  color: #f7a5a5;
+}
+
+.actionBtnDanger:hover {
+  background: #3b1b1b;
+  color: #ffb8b8;
+}
+
+/* Light Theme support */
+:global(html[data-theme="light"]) .uploadDropzone {
+  border-color: #c9d4ca;
+  background: #f7faf7;
+}
+
+:global(html[data-theme="light"]) .uploadDropzone:hover,
+:global(html[data-theme="light"]) .uploadDropzone.dragging {
+  border-color: #2b7044;
+  background: #edf5ee;
+}
+
+:global(html[data-theme="light"]) .uploadIcon {
+  color: #266b3d;
+}
+
+:global(html[data-theme="light"]) .uploadTitle {
+  color: #1a271e;
+}
+
+:global(html[data-theme="light"]) .uploadSubtitle {
+  color: #6a796e;
+}
+
+:global(html[data-theme="light"]) .previewContainer {
+  border-color: #dbe4dc;
+  background: #f8faf8;
+}
+
+:global(html[data-theme="light"]) .previewImage {
+  border-color: #d1ded2;
+}
+
+:global(html[data-theme="light"]) .previewName {
+  color: #1a271e;
+}
+
+:global(html[data-theme="light"]) .previewMeta {
+  color: #6a796e;
+}
+
+:global(html[data-theme="light"]) .actionBtn {
+  border-color: #d1ded2;
+  background: #edf2ed;
+  color: #243528;
+}
+
+:global(html[data-theme="light"]) .actionBtn:hover {
+  background: #e1eae1;
+}
+
+:global(html[data-theme="light"]) .actionBtnDanger {
+  border-color: #fad1d1;
+  background: #fdf2f2;
+  color: #c53030;
+}
+
+:global(html[data-theme="light"]) .actionBtnDanger:hover {
+  background: #fde8e8;
+}
+
+/* ====================================================
+   PRODUCT MODAL EXPANSION & SPECS BUILDER STYLES
+   ==================================================== */
+.productModal {
+  width: min(740px, 96vw) !important;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #3b493d #161c17;
+}
+
+.productModal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.productModal::-webkit-scrollbar-thumb {
+  background: #3b493d;
+  border-radius: 3px;
+}
+
+.specsSection {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  border: 1px solid #283329;
+  border-radius: 8px;
+  padding: 18px;
+  background: #141915;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.specsHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.specsTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.specsTitle {
+  margin: 0;
+  font: 600 13px 'Space Grotesk', sans-serif;
+  color: #f1f4ee;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.specsCountBadge {
+  background: rgba(168, 240, 0, 0.15);
+  color: #a8f000;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.specsSubtitle {
+  margin: 0;
+  font-size: 11px;
+  color: #889486;
+}
+
+.specsActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.specBtnSmall {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #334035;
+  background: #1a221b;
+  color: #dbe4da;
+  transition: all 0.15s ease;
+}
+
+.specBtnSmall:hover {
+  background: #232e25;
+  border-color: #425244;
+  color: #fff;
+}
+
+.specBtnPrimary {
+  background: rgba(168, 240, 0, 0.15);
+  border-color: rgba(168, 240, 0, 0.4);
+  color: #a8f000;
+}
+
+.specBtnPrimary:hover {
+  background: #a8f000;
+  color: #0c1209;
+  border-color: #a8f000;
+}
+
+.specBtnDanger {
+  border-color: #5a2e2e;
+  background: #261616;
+  color: #fca5a5;
+}
+
+.specBtnDanger:hover {
+  background: #3b1b1b;
+  color: #fff;
+}
+
+.specsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.specRow {
+  display: grid;
+  grid-template-columns: 32px 1fr 1.35fr 64px;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  background: #181f19;
+  border: 1px solid #273328;
+  border-radius: 6px;
+  transition: border-color 0.15s ease;
+}
+
+.specRow:focus-within {
+  border-color: #a8f000;
+}
+
+.specIndex {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7a8878;
+  text-align: center;
+}
+
+.specInput {
+  min-height: 32px !important;
+  padding: 0 10px !important;
+  font-size: 12px !important;
+  background: #121613 !important;
+  border: 1px solid #2e3b2f !important;
+  border-radius: 4px !important;
+  color: #f1f4ee !important;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.specInput:focus {
+  border-color: #a8f000 !important;
+}
+
+.specRowActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.specRowBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #334035;
+  background: #151a16;
+  color: #8fa090;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.specRowBtn:hover:not(:disabled) {
+  background: #242e26;
+  color: #f1f4ee;
+  border-color: #435446;
+}
+
+.specRowBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.specRowBtnDelete:hover {
+  background: #361717;
+  color: #ff9b9b;
+  border-color: #632d2d;
+}
+
+.specsEmpty {
+  text-align: center;
+  padding: 22px 14px;
+  background: #111512;
+  border: 1px dashed #2b382d;
+  border-radius: 6px;
+  color: #7b8979;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.specsEmpty i {
+  font-size: 22px;
+  color: #4b5849;
+}
+
+.specsEmpty p {
+  margin: 0;
+  font-size: 12px;
+  color: #bdc8b7;
+}
+
+.specsEmpty small {
+  font-size: 10.5px;
+  color: #728170;
+}
+
+/* Light mode overrides for Product Modal and Specs Builder */
+:global(html[data-theme="light"]) .specsSection {
+  border-color: #dce4dc;
+  background: #f7faf7;
+}
+
+:global(html[data-theme="light"]) .specsTitle {
+  color: #1a271e;
+}
+
+:global(html[data-theme="light"]) .specsCountBadge {
+  background: rgba(43, 112, 68, 0.12);
+  color: #276c40;
+}
+
+:global(html[data-theme="light"]) .specsSubtitle {
+  color: #667669;
+}
+
+:global(html[data-theme="light"]) .specBtnSmall {
+  border-color: #d1ded2;
+  background: #edf2ed;
+  color: #243528;
+}
+
+:global(html[data-theme="light"]) .specBtnSmall:hover {
+  background: #e1eae1;
+}
+
+:global(html[data-theme="light"]) .specBtnPrimary {
+  background: #2b7044;
+  border-color: #2b7044;
+  color: #ffffff;
+}
+
+:global(html[data-theme="light"]) .specBtnPrimary:hover {
+  background: #235c38;
+}
+
+:global(html[data-theme="light"]) .specRow {
+  background: #ffffff;
+  border-color: #dbe4dc;
+}
+
+:global(html[data-theme="light"]) .specInput {
+  background: #f8faf8 !important;
+  border-color: #d2ddd3 !important;
+  color: #1a271e !important;
+}
+
+:global(html[data-theme="light"]) .specRowBtn {
+  background: #edf2ed;
+  border-color: #d1ded2;
+  color: #4a5c4e;
+}
+
+:global(html[data-theme="light"]) .specsEmpty {
+  background: #ffffff;
+  border-color: #d6ded7;
+  color: #637366;
+}
+
+:global(html[data-theme="light"]) .specsEmpty p {
+  color: #1a271e;
+}

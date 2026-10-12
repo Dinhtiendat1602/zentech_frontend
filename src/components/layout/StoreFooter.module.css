@@ -1,0 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+.footer {
+  width: min(1320px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 30px 0 0;
+  border-top: 1px solid #242a25;
+  color: #f1f4ee;
+  font:
+    14px/1.5 "DM Sans",
+    sans-serif;
+}
+.footer a {
+  color: inherit;
+  text-decoration: none;
+}
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.8fr 1fr 0.8fr 1.15fr;
+  gap: 30px;
+  padding-bottom: 24px;
+}
+.brand {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.brandName {
+  color: #f4f6f2;
+  font:
+    700 21px/0.95 "Space Grotesk",
+    sans-serif;
+  letter-spacing: 1px;
+}
+.brandTag {
+  margin-top: 5px;
+  color: #a8f000;
+  font:
+    700 8px "Space Grotesk",
+    sans-serif;
+  letter-spacing: 1.5px;
+}
+.footerBrand > p,
+.newsletter > p {
+  max-width: 235px;
+  margin: 13px 0;
+  color: #929a91;
+  font-size: 10px;
+  line-height: 1.65;
+}
+.socials {
+  display: flex;
+  gap: 7px;
+}
+.socials a {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border: 1px solid #303730;
+  border-radius: 50%;
+  color: #d7ddd3;
+  font-size: 10px;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.socials a:hover {
+  border-color: #a8f000;
+  color: #a8f000;
+}
+.footerColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footerColumn h2,
+.newsletter h2 {
+  margin: 3px 0 6px;
+  color: #e7ebe4;
+  font:
+    600 10px "Space Grotesk",
+    sans-serif;
+  letter-spacing: 0.55px;
+}
+.footerColumn a {
+  color: #a5aca2;
+  font-size: 10px;
+}
+.footerColumn a:hover,
+.footerBottom > a:hover {
+  color: #a8f000;
+}
+.newsletter form {
+  display: flex;
+  width: 100%;
+  height: 36px;
+  border: 1px solid #383f38;
+  background: #101411;
+}
+.newsletter input {
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  padding: 0 10px;
+  outline: 0;
+  border: 0;
+  background: transparent;
+  color: #f1f4ee;
+  font:
+    10px "DM Sans",
+    sans-serif;
+}
+.newsletter button {
+  width: 38px;
+  flex: 0 0 38px;
+  border: 0;
+  background: #a8f000;
+  color: #10140b;
+  cursor: pointer;
+}
+.successMessage {
+  display: inline-block;
+  margin-top: 6px;
+  color: #c8ee8b;
+  font-size: 10px;
+}
+.footerBottom {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid #242a25;
+  color: #929a91;
+  font-size: 9px;
+}
+.footerBottom p {
+  margin: 0;
+}
+.footerBottom > a {
+  color: #a5aca2;
+}
+.payment {
+  display: flex;
+  gap: 5px;
+}
+.payment span {
+  padding: 3px 6px;
+  border-radius: 2px;
+  background: #e9ece7;
+  color: #131713;
+  font:
+    700 8px "Space Grotesk",
+    sans-serif;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+:global(html[data-theme="light"]) .footer {
+  border-color: #d9dfd4;
+  color: #172016;
+}
+:global(html[data-theme="light"]) .brandName,
+:global(html[data-theme="light"]) .footerColumn h2,
+:global(html[data-theme="light"]) .newsletter h2 {
+  color: #20291e;
+}
+:global(html[data-theme="light"]) .brandTag,
+:global(html[data-theme="light"]) .successMessage {
+  color: #355f00;
+}
+:global(html[data-theme="light"]) .footerBrand > p,
+:global(html[data-theme="light"]) .newsletter > p {
+  color: #586254;
+}
+:global(html[data-theme="light"]) .footerColumn a,
+:global(html[data-theme="light"]) .footerBottom,
+:global(html[data-theme="light"]) .footerBottom > a {
+  color: #586254;
+}
+:global(html[data-theme="light"]) .socials a {
+  border-color: #cbd4c5;
+  color: #46543a;
+}
+:global(html[data-theme="light"]) .socials a:hover {
+  border-color: #355f00;
+  color: #355f00;
+}
+:global(html[data-theme="light"]) .newsletter form {
+  border-color: #d1d9cd;
+  background: #fff;
+}
+:global(html[data-theme="light"]) .newsletter input {
+  color: #20291e;
+}
+:global(html[data-theme="light"]) .footerBottom {
+  border-color: #d9dfd4;
+}
+@media (max-width: 1050px) {
+  .footer {
+    width: calc(100% - 40px);
+  }
+  .footerGrid {
+    grid-template-columns: 1.2fr 1fr 1fr;
+    row-gap: 22px;
+  }
+  .newsletter {
+    grid-column: 2/-1;
+  }
+}
+@media (max-width: 700px) {
+  .footer {
+    width: calc(100% - 32px);
+    padding-top: 24px;
+  }
+  .footerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 16px;
+  }
+  .footerBrand,
+  .newsletter {
+    grid-column: 1/-1;
+  }
+  .footerBrand > p {
+    max-width: 320px;
+  }
+  .footerBottom {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 11px 0;
+  }
+  .payment {
+    order: 3;
+    width: 100%;
+  }
+}
