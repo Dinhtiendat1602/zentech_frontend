@@ -891,3 +891,110 @@ html[data-theme="dark"] .adminFormField textarea {
 html[data-theme="dark"] .adminCheckField {
   color: #bdc9bb;
 }
+
+/* Admin Pagination */
+.adminPagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-top: 1px solid #dfe5e0;
+  background: #fbfdfa;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adminPaginationInfo {
+  font-size: 12px;
+  color: #59675e;
+}
+
+.adminPaginationInfo strong {
+  color: #1b2620;
+  font-weight: 700;
+}
+
+.adminPaginationControls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.adminPaginationBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #d0d8ce;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #3b4b40;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.adminPaginationBtn:hover:not(:disabled) {
+  border-color: #38634c;
+  color: #1b2e22;
+  background: #f1f6f2;
+}
+
+.adminPaginationBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.adminPaginationBtn.active {
+  background: #38634c;
+  border-color: #38634c;
+  color: #ffffff;
+}
+
+.adminPaginationEllipsis {
+  padding: 0 4px;
+  color: #8c9b90;
+  font-size: 12px;
+  user-select: none;
+}
+
+html[data-theme="dark"] .adminPagination {
+  border-color: #2b342d;
+  background: #111713;
+}
+
+html[data-theme="dark"] .adminPaginationInfo {
+  color: #8fa092;
+}
+
+html[data-theme="dark"] .adminPaginationInfo strong {
+  color: #e5ece2;
+}
+
+html[data-theme="dark"] .adminPaginationBtn {
+  border-color: #344037;
+  background: #18201a;
+  color: #c7d2c4;
+}
+
+html[data-theme="dark"] .adminPaginationBtn:hover:not(:disabled) {
+  border-color: #a8f000;
+  color: #a8f000;
+  background: rgba(168, 240, 0, 0.08);
+}
+
+html[data-theme="dark"] .adminPaginationBtn.active {
+  background: #a8f000;
+  border-color: #a8f000;
+  color: #0c120e;
+  box-shadow: 0 0 10px rgba(168, 240, 0, 0.35);
+}
+
+html[data-theme="dark"] .adminPaginationEllipsis {
+  color: #65756a;
+}
+

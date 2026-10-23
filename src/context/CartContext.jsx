@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CartContext } from './cartContextValue.js';
+import { showToast } from './ToastContext.jsx';
 
 const STORAGE_KEY = 'zen-cart';
 
@@ -20,7 +21,7 @@ export function CartProvider({ children }) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
-  const addItem = (product, quantity = 1) => {
+  const addItem = (product, quantity = 1, options = {}) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === product.id);
       if (existingItem) {
@@ -30,6 +31,15 @@ export function CartProvider({ children }) {
       }
       return [...currentItems, { ...product, quantity }];
     });
+
+    if (!options?.silent) {
+      showToast({
+        type: 'cart',
+        title: 'Đã thêm vào giỏ hàng',
+        product,
+        quantity,
+      });
+    }
   };
 
   const setQuantity = (productId, quantity) => {

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { adminRequest, formatAdminDate, formatAdminPrice } from '../adminApi.js';
+import { adminRequest, formatAdminDate, formatAdminTime, formatAdminPrice } from '../adminApi.js';
+import AdminPagination from '../AdminPagination.jsx';
 
 const STATUS_LABELS = {
   pending: 'Chờ xác nhận',
@@ -42,10 +43,12 @@ function OrderAdmin() {
   const [orders, setOrders] = useState([]);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const PAGE_SIZE = 20;
 
   const loadOrders = async () => {
     setLoading(true);
@@ -75,6 +78,15 @@ function OrderAdmin() {
       return matchFilter && searchTarget.includes(query.toLowerCase());
     });
   }, [orders, query, filter]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, filter]);
+
+  const paginatedOrders = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredOrders.slice(start, start + PAGE_SIZE);
+  }, [filteredOrders, page]);
 
   const updateOrder = async (order, patch) => {
     setBusy(order.id);
@@ -181,7 +193,7 @@ function OrderAdmin() {
               </tr>
             </thead>
             <tbody>
-              {filteredOrders.map((order) => {
+              {paginatedOrders.map((order) => {
                 const availableStatuses = getNextStatuses(order.status);
                 const isFinalStatus = order.status === 'completed' || order.status === 'cancelled';
                 return (
@@ -193,7 +205,20 @@ function OrderAdmin() {
                       {order.customerName}
                       <span className="adminProductMeta">{order.customerEmail}</span>
                     </td>
-                    <td>{formatAdminDate(order.created_at || order.createdAt)}</td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        <strong style={{ fontSize: '13px' }}>
+                          {formatAdminDate(order.createdAt || order.created_at)}
+                        </strong>
+                        <span
+                          className="adminProductMeta"
+                          style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          <i className="fa-regular fa-clock" style={{ fontSize: '10px' }} />
+                          {formatAdminTime(order.createdAt || order.created_at)}
+                        </span>
+                      </div>
+                    </td>
                     <td>
                       <select
                         className="adminSelect"
@@ -233,6 +258,16 @@ function OrderAdmin() {
           {loading && <p className="adminEmpty">Đang tải đơn hàng...</p>}
           {!loading && !filteredOrders.length && <p className="adminEmpty">Không có đơn hàng phù hợp.</p>}
         </div>
+
+        {!loading && filteredOrders.length > 0 && (
+          <AdminPagination
+            currentPage={page}
+            totalItems={filteredOrders.length}
+            pageSize={PAGE_SIZE}
+            onPageChange={setPage}
+            itemName="đơn hàng"
+          />
+        )}
       </section>
     </main>
   );

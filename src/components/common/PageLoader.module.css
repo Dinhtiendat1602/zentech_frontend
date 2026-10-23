@@ -1,0 +1,199 @@
+/* Top Progress Bar Container */
+.progressBarContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #a8f000 0%, #34d399 45%, #00e5ff 100%);
+  box-shadow: 0 0 14px rgba(168, 240, 0, 0.9), 0 0 6px rgba(0, 229, 255, 0.7);
+  border-radius: 0 2px 2px 0;
+  transition: width 0.16s cubic-bezier(0.1, 0.85, 0.25, 1), opacity 0.22s ease;
+  will-change: width, opacity;
+}
+
+.glowHead {
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 10px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px 3px #a8f000, 0 0 20px 6px #00e5ff;
+}
+
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  animation: barShimmer 0.8s infinite linear;
+}
+
+@keyframes barShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Subtle Ambient Center Overlay & Badge */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(8, 10, 9, 0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.overlayVisible {
+  opacity: 1;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 22px;
+  background: rgba(14, 18, 15, 0.92);
+  border: 1px solid rgba(168, 240, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(168, 240, 0, 0.12);
+  border-radius: 999px;
+  color: #f1f4ee;
+  transform: scale(0.92) translateY(6px);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  will-change: transform, opacity;
+}
+
+.badgeVisible {
+  transform: scale(1) translateY(0);
+}
+
+.spinnerRing {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.outerRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(168, 240, 0, 0.15);
+  border-top-color: #a8f000;
+  border-right-color: #00e5ff;
+  animation: spin 0.65s linear infinite;
+}
+
+.innerCore {
+  color: #a8f000;
+  font-size: 11px;
+  animation: pulse 0.7s ease-in-out infinite alternate;
+}
+
+.badgeText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.badgeBrand {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #f4f6f2;
+  letter-spacing: 0.8px;
+}
+
+.badgeSub {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-size: 11px;
+  color: #a8f000;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dotPulse {
+  display: inline-block;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.85);
+    opacity: 0.75;
+  }
+  to {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Light Theme Adaptability */
+:global(html[data-theme="light"]) .overlay {
+  background: rgba(245, 247, 244, 0.4);
+}
+
+:global(html[data-theme="light"]) .badge {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(90, 160, 0, 0.3);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1), 0 0 20px rgba(168, 240, 0, 0.15);
+  color: #1a221a;
+}
+
+:global(html[data-theme="light"]) .badgeBrand {
+  color: #121813;
+}
+
+:global(html[data-theme="light"]) .badgeSub {
+  color: #3b7c12;
+}
+
+:global(html[data-theme="light"]) .innerCore {
+  color: #3b7c12;
+}

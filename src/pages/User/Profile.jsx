@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes.js';
 import { formatPrice, getProductImage } from '../../data/products.js';
 import { getValidToken, logout, isTokenExpired } from '../../utils/auth.js';
+import { showToast } from '../../context/ToastContext.jsx';
 import styles from './Profile.module.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
@@ -167,8 +168,17 @@ function Profile() {
 	const removeFavorite = async (slug) => {
 		try {
 			await request(`/users/me/wishlist/${encodeURIComponent(slug)}`, token, { method: 'DELETE' });
+			const removedItem = dashboard?.wishlist?.find((item) => item.id === slug);
 			setDashboard((current) => ({ ...current, wishlist: current.wishlist.filter((item) => item.id !== slug) }));
 			showNotice('Đã xóa sản phẩm khỏi danh sách yêu thích.');
+			showToast({
+				type: 'wishlist-remove',
+				title: 'Đã bỏ yêu thích',
+				product: removedItem
+					? { name: removedItem.name, image: getProductImage(removedItem.image, 240) }
+					: null,
+				message: 'Đã xóa sản phẩm khỏi danh sách yêu thích.',
+			});
 		} catch (requestError) {
 			setError(requestError.message);
 		}
@@ -178,6 +188,11 @@ function Profile() {
 		try {
 			await navigator.clipboard.writeText(code);
 			showNotice(`Đã sao chép mã ${code}.`);
+			showToast({
+				type: 'success',
+				title: 'ĐÃ SAO CHÉP MÃ',
+				message: `Đã sao chép mã ${code} vào bộ nhớ tạm.`,
+			});
 		} catch {
 			showNotice(`Mã ưu đãi: ${code}`);
 		}

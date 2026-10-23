@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../../../context/useCart.js';
 import { ROUTES } from '../../../constants/routes.js';
 import { formatPrice, getProductImage } from '../../../data/products.js';
+import { getValidToken, logout } from '../../../utils/auth.js';
+import { showToast } from '../../../context/ToastContext.jsx';
 import Drawer from '../../../components/common/Drawer.jsx';
 import styles from './ProductDetail.module.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
 
 function ProductDetail() {
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
-  const { addItem } = useCart();
+  const [addedToast, setAddedToast] = useState(false);
+  const [justAddedQuantity, setJustAddedQuantity] = useState(1);
+  const { addItem, itemCount } = useCart();
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,6 +25,8 @@ function ProductDetail() {
   const [specSearch, setSpecSearch] = useState('');
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [addedRelId, setAddedRelId] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [wishlistBusy, setWishlistBusy] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -87,13 +94,145 @@ function ProductDetail() {
     fetchReviews();
   }, [product, productId]);
 
-  if (loading) return <div className={styles.page}>Đang tải sản phẩm...</div>;
-  if (!product) return <Navigate to={ROUTES.products} replace />;
+  // Fetch user wishlist status
+  useEffect(() => {
+    if (!product) return;
+    const token = getValidToken();
+    if (!token) {
+      setIsFavorite(false);
+      return;
+    }
+    fetch(`${API_URL}/users/me/wishlist`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && Array.isArray(data.data?.wishlist)) {
+          setIsFavorite(data.data.wishlist.some((w) => w.id === product.id));
+        }
+      })
+      .catch(() => {});
+  }, [product]);
 
   const addToCart = () => {
-    addItem({ id: product.id, name: product.name, price: product.price, image: getProductImage(product.image, 700) }, quantity);
+    if (!product) return;
+    addItem(
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: getProductImage(product.image, 700),
+        brand: product.brand,
+        type: product.type,
+      },
+      quantity
+    );
+    setJustAddedQuantity(quantity);
     setAdded(true);
+    setAddedToast(true);
+    setTimeout(() => setAdded(false), 2000);
   };
+
+  const toggleWishlist = async () => {
+    if (!product) return;
+    const token = getValidToken();
+    if (!token) {
+      logout({ expired: true, redirect: true, navigate });
+      return;
+    }
+    setWishlistBusy(true);
+    const wasSaved = isFavorite;
+    try {
+      const wishlistUrl = `${API_URL}/users/me/wishlist`;
+      const response = await fetch(wasSaved ? `${wishlistUrl}/${encodeURIComponent(product.id)}` : wishlistUrl, {
+        method: wasSaved ? 'DELETE' : 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(wasSaved ? {} : { 'Content-Type': 'application/json' }),
+        },
+        ...(!wasSaved ? { body: JSON.stringify({ slug: product.id }) } : {}),
+      });
+      if (response.status === 401) {
+        logout({ expired: true, redirect: true, navigate });
+        return;
+      }
+      if (response.ok) {
+        setIsFavorite(!wasSaved);
+        showToast({
+          type: wasSaved ? 'wishlist-remove' : 'wishlist-add',
+          title: wasSaved ? 'Đã bỏ yêu thích' : 'Đã thêm vào yêu thích',
+          product: {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: getProductImage(product.image, 240),
+          },
+        });
+      }
+    } catch {
+      // ignore
+    } finally {
+      setWishlistBusy(false);
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!product) return;
+    addItem(
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: getProductImage(product.image, 700),
+        brand: product.brand,
+        type: product.type,
+      },
+      quantity,
+      { silent: true }
+    );
+    navigate(ROUTES.checkout);
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--muted, #888)' }}>
+          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '2.4rem', color: 'var(--accent, #a8f000)', marginBottom: '16px' }} />
+          <p style={{ fontSize: '1.1rem', marginTop: '12px' }}>Đang tải thông tin sản phẩm...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className={styles.page}>
+        <div style={{ padding: '80px 20px', textAlign: 'center' }}>
+          <i className="fa-solid fa-triangle-exclamation" style={{ fontSize: '3rem', color: '#f59e0b', marginBottom: '16px' }} />
+          <h2 style={{ fontSize: '1.4rem', marginBottom: '8px' }}>Không tìm thấy sản phẩm</h2>
+          <p style={{ color: 'var(--muted, #888)', marginBottom: '24px' }}>
+            Sản phẩm bạn tìm kiếm không tồn tại hoặc đã tạm ngừng kinh doanh.
+          </p>
+          <Link
+            to={ROUTES.products}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 24px',
+              background: 'var(--accent, #a8f000)',
+              color: '#080a09',
+              fontWeight: 700,
+              borderRadius: '999px',
+              textDecoration: 'none',
+            }}
+          >
+            <i className="fa-solid fa-arrow-left" /> Quay lại danh mục sản phẩm
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const avgRating = reviews.length
     ? (reviews.reduce((acc, r) => acc + Number(r.rating || 5), 0) / reviews.length).toFixed(1)
@@ -102,9 +241,9 @@ function ProductDetail() {
   const productSpecs = product.specs || [];
   const filteredSpecs = specSearch.trim()
     ? productSpecs.filter((s) =>
-        s.specName.toLowerCase().includes(specSearch.toLowerCase()) ||
-        s.specValue.toLowerCase().includes(specSearch.toLowerCase())
-      )
+      s.specName.toLowerCase().includes(specSearch.toLowerCase()) ||
+      s.specValue.toLowerCase().includes(specSearch.toLowerCase())
+    )
     : productSpecs;
 
   const standardInfo = [
@@ -117,7 +256,7 @@ function ProductDetail() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.breadcrumb}><Link to="/">Trang chủ</Link> / <Link to={ROUTES.products}>{product.brand} {product.type.toLowerCase()}</Link> / {product.name}</div>
+      <div className={styles.breadcrumb}><Link to="/">Trang chủ</Link> / <Link to={ROUTES.products}>{product.brand || 'Sản phẩm'} {(product.type || '').toLowerCase()}</Link> / {product.name}</div>
       <div className={styles.product}>
         <div className={styles.gallery}><span className={styles.galleryTag}>{product.badge || 'CHÍNH HÃNG'}</span><img src={getProductImage(product.image)} alt={product.name} /></div>
         <section className={styles.details}><span className={styles.eyebrow}>{(product.brand || '').toUpperCase()} / {(product.type || '').toUpperCase()}</span><h1>{product.name}</h1><div className={styles.rating}>★★★★★ <small>{avgRating} · {reviews.length || product.reviews || 0} đánh giá</small></div><div className={styles.price}><strong>{formatPrice(product.price)}</strong>{product.oldPrice && <del>{formatPrice(product.oldPrice)}</del>}</div>
@@ -174,7 +313,88 @@ function ProductDetail() {
           )}
 
           <div className={styles.features}><span><i className="fa-solid fa-check" /> Sản phẩm {product.brand} chính hãng</span><span><i className="fa-solid fa-check" /> Bảo hành chính hãng toàn quốc</span><span><i className="fa-solid fa-check" /> Kiểm tra ngoại quan trước khi giao</span><span><i className="fa-solid fa-check" /> Hỗ trợ tư vấn tương thích ngàm</span></div>
-          <div className={styles.purchase}><div className={styles.quantity}><button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Giảm số lượng">−</button><output>{quantity}</output><button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Tăng số lượng">+</button></div><button className={styles.add} type="button" onClick={addToCart}><i className="fa-solid fa-bag-shopping" /> THÊM VÀO GIỎ</button><Link className={styles.buy} to={ROUTES.cart}>XEM GIỎ HÀNG</Link></div>{added && <p className={styles.notice}>Đã thêm {quantity} sản phẩm vào giỏ hàng.</p>}
+          <div className={styles.purchaseSection}>
+            <div className={styles.purchase}>
+              <div className={styles.quantity}>
+                <button
+                  type="button"
+                  onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+                  aria-label="Giảm số lượng"
+                >
+                  −
+                </button>
+                <output>{quantity}</output>
+                <button
+                  type="button"
+                  onClick={() => setQuantity((value) => value + 1)}
+                  aria-label="Tăng số lượng"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                className={`${styles.add} ${added ? styles.addSuccess : ''}`}
+                type="button"
+                onClick={addToCart}
+                id="btn-add-to-cart"
+              >
+                <i className={added ? "fa-solid fa-check" : "fa-solid fa-bag-shopping"} />
+                <span>{added ? 'ĐÃ THÊM VÀO GIỎ' : 'THÊM VÀO GIỎ'}</span>
+              </button>
+
+              <button
+                className={styles.buy}
+                type="button"
+                onClick={handleBuyNow}
+                id="btn-buy-now"
+                title="Mua ngay và chuyển đến thanh toán"
+              >
+                <i className="fa-solid fa-bolt" />
+                <span>MUA NGAY</span>
+              </button>
+
+              <button
+                className={`${styles.favoriteActionBtn} ${isFavorite ? styles.favoriteActionBtnActive : ''}`}
+                type="button"
+                onClick={toggleWishlist}
+                disabled={wishlistBusy}
+                id="btn-toggle-wishlist"
+                aria-label={isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}
+                title={isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}
+              >
+                <i className={`${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart`} />
+              </button>
+            </div>
+
+            {/* Thông báo dạng thẻ nổi khi vừa thêm vào giỏ */}
+            {addedToast && (
+              <div className={styles.addedCard}>
+                <div className={styles.addedCardLeft}>
+                  <div className={styles.addedCardCheck}>
+                    <i className="fa-solid fa-check" />
+                  </div>
+                  <div className={styles.addedCardText}>
+                    <strong>Đã thêm {justAddedQuantity} sản phẩm vào giỏ!</strong>
+                    <span>{product.name}</span>
+                  </div>
+                </div>
+                <div className={styles.addedCardActions}>
+                  <Link to={ROUTES.cart} className={styles.addedCardViewBtn}>
+                    Xem giỏ hàng {itemCount > 0 && `(${itemCount})`} <i className="fa-solid fa-arrow-right" />
+                  </Link>
+                  <button
+                    type="button"
+                    className={styles.addedCardCloseBtn}
+                    onClick={() => setAddedToast(false)}
+                    aria-label="Đóng thông báo"
+                  >
+                    <i className="fa-solid fa-xmark" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </section>
       </div>
 

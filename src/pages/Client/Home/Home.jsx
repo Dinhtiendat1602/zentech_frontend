@@ -4,6 +4,7 @@ import { useCart } from '../../../context/useCart.js';
 import { ROUTES } from '../../../constants/routes.js';
 import { BRAND_IMAGES, CAMERA_BRANDS, formatPrice, getProductImage } from '../../../data/products.js';
 import { getValidToken, logout } from '../../../utils/auth.js';
+import { showToast } from '../../../context/ToastContext.jsx';
 import styles from './Home.module.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
@@ -13,10 +14,8 @@ function Home() {
   const { addItem } = useCart();
   const [productsData, setProductsData] = useState([]);
   const [wishlist, setWishlist] = useState(() => new Set());
-  const [toastMessage, setToastMessage] = useState('');
   const [openFaq, setOpenFaq] = useState('shipping');
   const [secondsLeft, setSecondsLeft] = useState(2 * 86400 + 14 * 3600 + 36 * 60 + 58);
-  const toastTimeoutRef = useRef(null);
 
   // Countdown timer for deals
   useEffect(() => {
@@ -94,28 +93,21 @@ function Home() {
           else updated.add(product.id);
           return updated;
         });
-        showToast(isSaved ? 'Đã xóa khỏi danh sách yêu thích' : 'Đã thêm vào danh sách yêu thích');
+        showToast({
+          type: isSaved ? 'wishlist-remove' : 'wishlist-add',
+          title: isSaved ? 'Đã bỏ yêu thích' : 'Đã thêm vào yêu thích',
+          product: {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: getProductImage(product.image, 240),
+          },
+        });
       }
     } catch {
       // ignore
     }
   };
-
-  const showToast = (message) => {
-    setToastMessage(message);
-    if (toastTimeoutRef.current) {
-      window.clearTimeout(toastTimeoutRef.current);
-    }
-    toastTimeoutRef.current = window.setTimeout(() => setToastMessage(''), 2500);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (toastTimeoutRef.current) {
-        window.clearTimeout(toastTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleAddToCart = (product) => {
     addItem(
@@ -128,7 +120,6 @@ function Home() {
       },
       1
     );
-    showToast(`Đã thêm "${product.name}" vào giỏ hàng`);
   };
 
   const displayedProducts = useMemo(() => {
@@ -302,7 +293,9 @@ function Home() {
                     <span className={styles.productCategory}>
                       {(product.brand || 'CHÍNH HÃNG').toUpperCase()} / {(product.type || 'MÁY ẢNH').toUpperCase()}
                     </span>
-                    <h3>{product.name}</h3>
+                    <h3>
+                      <Link to={`${ROUTES.products}/${product.id}`}>{product.name}</Link>
+                    </h3>
                     {product.description && (
                       <p className={styles.productDesc}>
                         {product.description.replace(/<[^>]*>/g, '').trim()}
@@ -587,14 +580,6 @@ function Home() {
           </div>
         </section>
       </main>
-
-      {/* Floating toast notification */}
-      {toastMessage && (
-        <div className={styles.toast} role="status">
-          <i className="fa-solid fa-circle-check" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
     </div>
   );
 }

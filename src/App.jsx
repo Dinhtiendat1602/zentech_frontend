@@ -2,9 +2,11 @@
 import { BrowserRouter } from 'react-router-dom';
 import { CartProvider } from './context/CartContext.jsx';
 import ThemeProvider from './context/ThemeContext.jsx';
+import ToastProvider from './context/ToastContext.jsx';
 import AppRoutes from './routes/AppRoutes.jsx';
 import StoreFooter from './components/layout/StoreFooter.jsx';
 import StoreHeader from './components/layout/StoreHeader.jsx';
+import PageLoader from './components/common/PageLoader.jsx';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -77,13 +79,16 @@ function AppContent() {
   useSessionWatcher();
 
   return (
-    <CartProvider>
-      <ThemeProvider>
-        {!isAdmin && <StoreHeader />}
-        <AppRoutes />
-        {!isAdmin && <StoreFooter />}
-      </ThemeProvider>
-    </CartProvider>
+    <ToastProvider>
+      <CartProvider>
+        <ThemeProvider>
+          <PageLoader />
+          {!isAdmin && <StoreHeader />}
+          <AppRoutes />
+          {!isAdmin && <StoreFooter />}
+        </ThemeProvider>
+      </CartProvider>
+    </ToastProvider>
   );
 }
 

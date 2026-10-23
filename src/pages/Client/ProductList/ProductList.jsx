@@ -4,6 +4,7 @@ import { useCart } from '../../../context/useCart.js';
 import { ROUTES } from '../../../constants/routes.js';
 import { CAMERA_BRANDS, formatPrice, getProductImage } from '../../../data/products.js';
 import { getValidToken, logout } from '../../../utils/auth.js';
+import { showToast } from '../../../context/ToastContext.jsx';
 import styles from './ProductList.module.css';
 
 function ProductList() {
@@ -97,8 +98,23 @@ function ProductList() {
         return updated;
       });
       setWishlistMessage(isSaved ? 'Đã xóa khỏi danh sách yêu thích.' : 'Đã thêm vào danh sách yêu thích.');
+      showToast({
+        type: isSaved ? 'wishlist-remove' : 'wishlist-add',
+        title: isSaved ? 'Đã bỏ yêu thích' : 'Đã thêm vào yêu thích',
+        product: {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: getProductImage(product.image, 240),
+        },
+      });
     } catch (requestError) {
       setWishlistMessage(requestError.message);
+      showToast({
+        type: 'error',
+        title: 'Lỗi',
+        message: requestError.message,
+      });
     } finally {
       setWishlistBusy('');
     }

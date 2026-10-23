@@ -718,6 +718,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.productInfo h3 a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.productInfo h3 a:hover {
+  color: var(--accent);
+}
 .productDesc {
   display: -webkit-box;
   -webkit-line-clamp: 2;

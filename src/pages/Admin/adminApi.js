@@ -28,4 +28,47 @@ export async function adminRequest(path, options = {}) {
 }
 
 export const formatAdminPrice = (value) => new Intl.NumberFormat('vi-VN').format(Number(value) || 0) + 'đ';
-export const formatAdminDate = (value) => value ? new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium' }).format(new Date(value)) : '—';
+
+export const formatAdminDate = (value) => {
+  if (!value) return '—';
+  try {
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '—';
+    return new Intl.DateTimeFormat('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(d);
+  } catch {
+    return '—';
+  }
+};
+
+export const formatAdminTime = (value) => {
+  if (!value) return '';
+  try {
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '';
+    return new Intl.DateTimeFormat('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    }).format(d);
+  } catch {
+    return '';
+  }
+};
+
+export const formatAdminDateTime = (value) => {
+  if (!value) return '—';
+  try {
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '—';
+    const time = formatAdminTime(d);
+    const date = formatAdminDate(d);
+    return time ? `${time} ${date}` : date;
+  } catch {
+    return '—';
+  }
+};

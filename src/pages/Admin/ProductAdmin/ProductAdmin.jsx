@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { adminRequest, formatAdminPrice } from '../adminApi.js';
 import { getProductImage } from '../../../data/products.js';
+import AdminPagination from '../AdminPagination.jsx';
 import styles from './ProductAdmin.module.css';
 
 export const DEFAULT_CAMERA_SPECS = [
@@ -73,6 +74,8 @@ function ProductAdmin() {
   const [error, setError] = useState('');
   const [modalError, setModalError] = useState('');
   const [notice, setNotice] = useState('');
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 20;
   const [specs, setSpecs] = useState(DEFAULT_CAMERA_SPECS.map((s) => ({ specName: s.specName, specValue: '' })));
 
   const isLens = useMemo(() => {
@@ -206,7 +209,16 @@ function ProductAdmin() {
     return () => { active = false; };
   }, [query, category]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [query, category]);
+
   const filteredProducts = useMemo(() => products, [products]);
+
+  const paginatedProducts = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredProducts.slice(start, start + PAGE_SIZE);
+  }, [filteredProducts, page]);
 
   const openModal = (product = null) => {
     setEditing(product);
@@ -495,7 +507,7 @@ function ProductAdmin() {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product) => (
+              {paginatedProducts.map((product) => (
                 <tr key={product.id}>
                   <td>
                     <div className="adminProductCell">
@@ -548,6 +560,16 @@ function ProductAdmin() {
           {loading && <p className="adminEmpty">Đang tải sản phẩm...</p>}
           {!loading && !filteredProducts.length && <p className="adminEmpty">Chưa có sản phẩm phù hợp.</p>}
         </div>
+
+        {!loading && filteredProducts.length > 0 && (
+          <AdminPagination
+            currentPage={page}
+            totalItems={filteredProducts.length}
+            pageSize={PAGE_SIZE}
+            onPageChange={setPage}
+            itemName="sản phẩm"
+          />
+        )}
       </section>
 
       {modalOpen && (
