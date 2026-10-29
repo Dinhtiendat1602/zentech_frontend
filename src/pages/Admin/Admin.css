@@ -12,6 +12,10 @@
   background: #f5f7f4;
   color: var(--admin-ink);
   font-family: "DM Sans", sans-serif;
+  transition: grid-template-columns 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.adminShell.sidebarCollapsed {
+  grid-template-columns: 72px minmax(0, 1fr);
 }
 .adminSidebar {
   position: sticky;
@@ -19,22 +23,52 @@
   display: flex;
   height: 100vh;
   flex-direction: column;
-  padding: 23px 16px 16px;
+  padding: 20px 14px 16px;
   border-right: 1px solid #e5eae6;
   background: #fff;
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1), padding 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+.adminSidebar.collapsed {
+  padding: 20px 10px 16px;
+  align-items: center;
+}
+.adminSidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 24px;
+  min-width: 0;
+}
+.adminSidebar.collapsed .adminSidebarHeader {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  width: 100%;
 }
 .adminBrand {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 7px 30px;
   color: #1c2a22;
   font:
     700 15px "Space Grotesk",
     sans-serif;
   text-decoration: none;
+  min-width: 0;
 }
-.adminBrand > span:last-child > span {
+.adminBrandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  white-space: nowrap;
+}
+.adminBrandText > span > span {
   color: #6f9b55;
 }
 .adminBrand small {
@@ -57,6 +91,40 @@
   font:
     700 19px "Space Grotesk",
     sans-serif;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.adminBrand:hover .adminBrandMark {
+  transform: scale(1.05);
+}
+.adminSidebar.collapsed .adminBrandText {
+  display: none;
+}
+.adminCollapseToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #e0e6e1;
+  border-radius: 6px;
+  background: #f8faf8;
+  color: #626f67;
+  cursor: pointer;
+  font-size: 11px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.adminCollapseToggle:hover {
+  background: #edf4e9;
+  color: #244d36;
+  border-color: #bcd4bf;
+  transform: scale(1.05);
+}
+.adminSidebar.collapsed .adminCollapseToggle {
+  width: 36px;
+  height: 26px;
 }
 .adminNavLabel {
   margin: 0 8px 9px;
@@ -65,9 +133,21 @@
   font-weight: 700;
   letter-spacing: 1.1px;
 }
+.adminSidebar.collapsed .adminNavLabel {
+  width: 24px;
+  height: 1px;
+  background: var(--admin-line);
+  color: transparent;
+  overflow: hidden;
+  margin: 4px auto 14px;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+}
 .adminNav {
   display: grid;
   gap: 4px;
+  width: 100%;
 }
 .adminNavLink {
   display: flex;
@@ -75,18 +155,20 @@
   align-items: center;
   gap: 12px;
   padding: 0 11px;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #626f67;
   font-size: 12px;
   text-decoration: none;
   transition:
     background 0.16s,
     color 0.16s;
+  white-space: nowrap;
 }
 .adminNavLink i {
   width: 17px;
   text-align: center;
   font-size: 13px;
+  flex-shrink: 0;
 }
 .adminNavLink:hover {
   background: #f4f7f3;
@@ -97,12 +179,34 @@
   color: #244d36;
   font-weight: 700;
 }
+.adminSidebar.collapsed .adminNavLink {
+  justify-content: center;
+  padding: 0;
+  width: 44px;
+  height: 42px;
+  margin: 0 auto;
+}
+.adminSidebar.collapsed .adminNavLink i {
+  font-size: 15px;
+  width: auto;
+}
+.adminSidebar.collapsed .adminNavLinkText {
+  display: none;
+}
 .adminSidebarBottom {
   display: grid;
-  gap: 15px;
+  gap: 8px;
   margin-top: auto;
-  padding: 13px 5px 2px;
+  padding: 13px 4px 2px;
   border-top: 1px solid var(--admin-line);
+  width: 100%;
+}
+.adminSidebar.collapsed .adminSidebarBottom {
+  padding: 12px 0 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 .adminOnline {
   display: flex;
@@ -117,27 +221,16 @@
   border-radius: 50%;
   background: #59a875;
 }
-.adminSidebarBottom button {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 5px;
-  border: 0;
-  background: none;
-  color: #7b625d;
-  cursor: pointer;
-  font:
-    500 11px "DM Sans",
-    sans-serif;
-  text-align: left;
-}
+.adminSidebarBottom button,
 .adminSidebarAction,
-.adminThemeButton {
+.adminThemeButton,
+.adminSidebarCollapseAction {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 7px 5px;
+  padding: 8px 6px;
   border: 0;
+  border-radius: 6px;
   background: none;
   color: #51675a;
   cursor: pointer;
@@ -146,10 +239,37 @@
     sans-serif;
   text-align: left;
   text-decoration: none;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+.adminSidebarBottom button.adminLogoutButton {
+  color: #7b625d;
+}
+.adminSidebarBottom button.adminLogoutButton:hover {
+  color: #b3392b;
+  background: #fdf1ef;
 }
 .adminSidebarAction:hover,
-.adminThemeButton:hover {
+.adminThemeButton:hover,
+.adminSidebarCollapseAction:hover {
   color: #244d36;
+  background: #f4f7f3;
+}
+.adminSidebar.collapsed .adminSidebarBottom button,
+.adminSidebar.collapsed .adminSidebarAction {
+  width: 42px;
+  height: 38px;
+  padding: 0;
+  justify-content: center;
+  margin: 0 auto;
+}
+.adminSidebar.collapsed .adminSidebarBottom i,
+.adminSidebar.collapsed .adminSidebarAction i {
+  font-size: 14px;
+  width: auto;
+}
+.adminSidebar.collapsed .adminBottomText {
+  display: none;
 }
 .adminMain {
   min-width: 0;
@@ -626,9 +746,159 @@
 .adminBar.highlight {
   background: #416a50;
 }
+.adminBarsMonth {
+  display: flex;
+  align-items: end;
+  gap: 3px;
+  height: 160px;
+  padding: 18px 12px 10px;
+  overflow-x: auto;
+}
+.adminBarsMonth .adminBarColumn {
+  flex: 1;
+  min-width: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
+}
+.adminBarsMonth .adminBar {
+  width: 100%;
+  max-width: 14px;
+  border-radius: 2px 2px 0 0;
+  transition: height 0.3s ease, background-color 0.2s ease;
+  background: #d6e8ce;
+}
+.adminBarsMonth .adminBar.highlight {
+  background: #38634c;
+}
+.adminBarsMonth .adminBar:hover {
+  filter: brightness(1.15);
+}
+.adminBarDate {
+  font-size: 8px;
+  color: #88938c;
+  white-space: nowrap;
+}
+.adminDateFilterGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.adminDateTabs {
+  display: inline-flex;
+  align-items: center;
+  background: #ebf0ec;
+  padding: 3px;
+  border-radius: 6px;
+  gap: 2px;
+}
+.adminDateTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: #55665d;
+  font:
+    600 11px "DM Sans",
+    sans-serif;
+  padding: 6px 11px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+.adminDateTab:hover {
+  color: #244d36;
+}
+.adminDateTab.active {
+  background: #fff;
+  color: #244d36;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.adminCustomDateForm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.adminDateInputLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #5f6e65;
+  font-weight: 500;
+}
+.adminDateInputLabel input[type="date"] {
+  min-height: 34px;
+  padding: 0 8px;
+  border: 1px solid #dfe5e0;
+  border-radius: 4px;
+  background: #fff;
+  color: #27372e;
+  font:
+    500 11px "DM Sans",
+    sans-serif;
+}
+.adminDateNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 9px 14px;
+  margin-bottom: 14px;
+  border-radius: 6px;
+  background: #eef5eb;
+  border: 1px solid #d4e6cf;
+  color: #2a553c;
+  font-size: 11.5px;
+}
+.adminDateNotice.allTime {
+  background: #f0f4f8;
+  border-color: #d2e0ed;
+  color: #264e73;
+}
+.adminDateNotice.custom {
+  background: #fdf8eb;
+  border-color: #faecc9;
+  color: #7d5b12;
+}
+.adminDateNoticeLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.adminDateActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  background: #fff;
+  color: inherit;
+  font:
+    600 11px "DM Sans",
+    sans-serif;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+.adminDateActionBtn:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
 @media (max-width: 900px) {
   .adminShell {
     grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .adminShell.sidebarCollapsed {
+    grid-template-columns: 72px minmax(0, 1fr);
   }
   .adminContent {
     padding: 23px 20px 36px;
@@ -644,7 +914,8 @@
   }
 }
 @media (max-width: 640px) {
-  .adminShell {
+  .adminShell,
+  .adminShell.sidebarCollapsed {
     grid-template-columns: 1fr;
   }
   .adminSidebar {
@@ -654,8 +925,31 @@
     border-right: 0;
     border-bottom: 1px solid var(--admin-line);
   }
+  .adminSidebarHeader {
+    margin-bottom: 8px;
+    padding: 0 4px;
+  }
+  .adminSidebar.collapsed {
+    padding: 12px;
+    align-items: stretch;
+  }
+  .adminSidebar.collapsed .adminSidebarHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0;
+    padding: 0 4px;
+    width: 100%;
+  }
+  .adminSidebar.collapsed .adminBrandText {
+    display: flex;
+  }
+  .adminSidebar.collapsed .adminNavLabel,
+  .adminSidebar.collapsed .adminNav,
+  .adminSidebar.collapsed .adminSidebarBottom {
+    display: none;
+  }
   .adminBrand {
-    padding: 0 4px 12px;
+    padding: 0 4px 4px;
   }
   .adminNavLabel {
     display: none;
@@ -672,6 +966,7 @@
   }
   .adminSidebarAction,
   .adminThemeButton,
+  .adminSidebarCollapseAction,
   .adminSidebarBottom button {
     padding: 6px 2px;
     font-size: 9px;
@@ -784,12 +1079,32 @@ html[data-theme="dark"] .adminNavLink.active {
   color: #d9efc3;
 }
 html[data-theme="dark"] .adminSidebarAction,
-html[data-theme="dark"] .adminThemeButton {
+html[data-theme="dark"] .adminThemeButton,
+html[data-theme="dark"] .adminSidebarCollapseAction {
   color: #bdc9bb;
 }
 html[data-theme="dark"] .adminSidebarAction:hover,
-html[data-theme="dark"] .adminThemeButton:hover {
+html[data-theme="dark"] .adminThemeButton:hover,
+html[data-theme="dark"] .adminSidebarCollapseAction:hover {
+  background: #1b241d;
   color: #d7f3b0;
+}
+html[data-theme="dark"] .adminCollapseToggle {
+  background: #19221b;
+  border-color: #303a32;
+  color: #a7b0a5;
+}
+html[data-theme="dark"] .adminCollapseToggle:hover {
+  background: #243126;
+  color: #d9efc3;
+  border-color: #3f5544;
+}
+html[data-theme="dark"] .adminSidebarBottom button.adminLogoutButton {
+  color: #c78d85;
+}
+html[data-theme="dark"] .adminSidebarBottom button.adminLogoutButton:hover {
+  background: #281816;
+  color: #ff9d92;
 }
 html[data-theme="dark"] .adminCrumb,
 html[data-theme="dark"] .adminTopName {
@@ -997,4 +1312,277 @@ html[data-theme="dark"] .adminPaginationBtn.active {
 html[data-theme="dark"] .adminPaginationEllipsis {
   color: #65756a;
 }
+
+html[data-theme="dark"] .adminDateTabs {
+  background: #18221b;
+}
+
+html[data-theme="dark"] .adminDateTab {
+  color: #9cb0a2;
+}
+
+html[data-theme="dark"] .adminDateTab:hover {
+  color: #d9efc3;
+}
+
+html[data-theme="dark"] .adminDateTab.active {
+  background: #253328;
+  color: #d9efc3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .adminDateInputLabel {
+  color: #9cb0a2;
+}
+
+html[data-theme="dark"] .adminDateInputLabel input[type="date"] {
+  background: #141b16;
+  border-color: #303a32;
+  color: #e8eee5;
+}
+
+html[data-theme="dark"] .adminDateNotice {
+  background: #17241b;
+  border-color: #273b2c;
+  color: #bde0c4;
+}
+
+html[data-theme="dark"] .adminDateNotice.allTime {
+  background: #15222e;
+  border-color: #23374a;
+  color: #b7d6f5;
+}
+
+html[data-theme="dark"] .adminDateNotice.custom {
+  background: #2b2314;
+  border-color: #42361f;
+  color: #f7dda6;
+}
+
+html[data-theme="dark"] .adminDateActionBtn {
+  background: #1b261e;
+}
+
+html[data-theme="dark"] .adminBarsMonth .adminBar {
+  background: #26382a;
+}
+
+html[data-theme="dark"] .adminBarsMonth .adminBar.highlight {
+  background: #8ec360;
+}
+
+html[data-theme="dark"] .adminBarDate {
+  color: #7b8a7f;
+}
+
+/* Order Detail & Edit Modal Styles */
+.adminModal.adminModalLg {
+  width: min(780px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.adminDetailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 640px) {
+  .adminDetailGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.adminDetailCard {
+  border: 1px solid #dfe5e0;
+  border-radius: 6px;
+  padding: 14px 16px;
+  background: #fbfdfb;
+}
+
+html[data-theme="dark"] .adminDetailCard {
+  border-color: #28352b;
+  background: #151a16;
+}
+
+.adminDetailCardTitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3f5f49;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+html[data-theme="dark"] .adminDetailCardTitle {
+  color: #a8f000;
+}
+
+.adminDetailItem {
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: #26352c;
+  margin-bottom: 5px;
+  word-break: break-word;
+}
+
+html[data-theme="dark"] .adminDetailItem {
+  color: #d1ded4;
+}
+
+.adminDetailItem strong {
+  color: #59675e;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 90px;
+}
+
+html[data-theme="dark"] .adminDetailItem strong {
+  color: #8c9b90;
+}
+
+.adminOrderItemsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.adminOrderItemsTable th {
+  text-align: left;
+  padding: 8px 10px;
+  background: #f1f5f2;
+  border-bottom: 1px solid #dfe5e0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #59675e;
+  text-transform: uppercase;
+}
+
+html[data-theme="dark"] .adminOrderItemsTable th {
+  background: #1b221d;
+  border-bottom-color: #28352b;
+  color: #8c9b90;
+}
+
+.adminOrderItemsTable td {
+  padding: 10px;
+  border-bottom: 1px solid #edf1ee;
+  color: #26352c;
+  vertical-align: middle;
+}
+
+html[data-theme="dark"] .adminOrderItemsTable td {
+  border-bottom-color: #202722;
+  color: #d1ded4;
+}
+
+.adminItemThumb {
+  width: 38px;
+  height: 38px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: #2a342c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #3d4a3e;
+}
+
+.adminOrderSummaryBox {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background: #f7faf8;
+  border: 1px solid #dfe5e0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+html[data-theme="dark"] .adminOrderSummaryBox {
+  background: #141915;
+  border-color: #28352b;
+}
+
+.adminSummaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #59675e;
+}
+
+html[data-theme="dark"] .adminSummaryRow {
+  color: #92a297;
+}
+
+.adminSummaryRow.total {
+  border-top: 1px dashed #d1dbd3;
+  padding-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #19271e;
+}
+
+html[data-theme="dark"] .adminSummaryRow.total {
+  border-top-color: #334237;
+  color: #a8f000;
+}
+
+.adminStatusPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.adminStatusPill.pending {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.adminStatusPill.confirmed {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.adminStatusPill.shipping {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.adminStatusPill.completed {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.adminStatusPill.cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.adminStatusPill.paid {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.adminStatusPill.unpaid {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.adminStatusPill.failed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+
 

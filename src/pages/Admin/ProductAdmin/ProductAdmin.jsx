@@ -87,11 +87,17 @@ function ProductAdmin() {
     return false;
   }, [formCategoryId, categories, editing]);
 
-  // Image upload states
+  // Image upload states (Thumbnail)
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Sub-images (Ảnh phụ) states
+  const [subImages, setSubImages] = useState([]);
+  const [subImageUploadLoading, setSubImageUploadLoading] = useState(false);
+  const [newSubImageUrl, setNewSubImageUrl] = useState('');
+  const subFileInputRef = useRef(null);
 
   const addSpecRow = () => {
     setSpecs((prev) => [...prev, { specName: '', specValue: '' }]);
@@ -237,6 +243,14 @@ function ProductAdmin() {
     if (product) {
       setPreviewUrl(product.image || '');
       setSelectedFile(null);
+      setSubImages(
+        Array.isArray(product.subImages) && product.subImages.length > 0
+          ? [...product.subImages]
+          : (Array.isArray(product.images)
+              ? product.images.filter((img) => img !== (product.image || product.thumbnail))
+              : [])
+      );
+      setNewSubImageUrl('');
       if (Array.isArray(product.specs)) {
         setSpecs(prepareSpecsForForm(product.specs, productIsLens));
       } else {
@@ -263,6 +277,8 @@ function ProductAdmin() {
     } else {
       setPreviewUrl('');
       setSelectedFile(null);
+      setSubImages([]);
+      setNewSubImageUrl('');
       setSpecs(DEFAULT_CAMERA_SPECS.map((s) => ({ specName: s.specName, specValue: '' })));
     }
     setModalOpen(true);
@@ -273,6 +289,8 @@ function ProductAdmin() {
     setModalOpen(false);
     setSelectedFile(null);
     setPreviewUrl('');
+    setSubImages([]);
+    setNewSubImageUrl('');
     setModalError('');
     setFormCategoryId('');
     setSpecs(DEFAULT_CAMERA_SPECS.map((s) => ({ specName: s.specName, specValue: '' })));
@@ -319,6 +337,55 @@ function ProductAdmin() {
     setSelectedFile(null);
     setPreviewUrl('');
     if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleAddSubImageUrl = (e) => {
+    e?.preventDefault?.();
+    const trimmed = (newSubImageUrl || '').trim();
+    if (!trimmed) return;
+    if (subImages.includes(trimmed)) {
+      setModalError('Ảnh này đã có trong danh sách ảnh phụ.');
+      return;
+    }
+    setSubImages((prev) => [...prev, trimmed]);
+    setNewSubImageUrl('');
+  };
+
+  const handleRemoveSubImage = (indexToRemove) => {
+    setSubImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleSubFilesChange = async (event) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+    setSubImageUploadLoading(true);
+    setModalError('');
+    try {
+      const uploadedUrls = [];
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) {
+          throw new Error(`File "${file.name}" không phải định dạng hình ảnh hợp lệ.`);
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          throw new Error(`File "${file.name}" vượt quá dung lượng tối đa 10MB.`);
+        }
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', file);
+        const res = await adminRequest('/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+        if (res?.url) {
+          uploadedUrls.push(res.url);
+        }
+      }
+      setSubImages((prev) => [...prev, ...uploadedUrls]);
+    } catch (err) {
+      setModalError(err.message || 'Lỗi khi tải ảnh phụ lên máy chủ.');
+    } finally {
+      setSubImageUploadLoading(false);
+      if (subFileInputRef.current) subFileInputRef.current.value = '';
+    }
   };
 
   const saveProduct = async (event) => {
@@ -369,6 +436,7 @@ function ProductAdmin() {
         salePrice: form.get('salePrice') === '' ? null : Number(form.get('salePrice')),
         stock: Number(form.get('stock')),
         thumbnail: finalThumbnail,
+        subImages,
         description: form.get('description')?.trim() || null,
         isFeatured: form.get('isFeatured') === 'on',
         specs: validSpecs,
@@ -738,6 +806,95 @@ function ProductAdmin() {
                         accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
                         onChange={handleFileChange}
                       />
+                    </div>
+                  )}
+                </div>
+
+                {/* Phần quản lý Ảnh phụ sản phẩm (Sub-images / Thư viện ảnh góc chụp chi tiết) */}
+                <div className="adminFormField wide">
+                  <div className={styles.subImagesHeader}>
+                    <div>
+                      <span className={styles.subImagesTitle}>
+                        <i className="fa-regular fa-images" /> Thư viện ảnh phụ (Góc chụp sản phẩm)
+                      </span>
+                      <span className={styles.subImagesSubtitle}>
+                        Hiển thị dưới ảnh đại diện tại trang chi tiết. Tải từ máy hoặc dán link ảnh từ mạng.
+                      </span>
+                    </div>
+                    <span className={styles.subImagesBadge}>{subImages.length} ảnh phụ</span>
+                  </div>
+
+                  {/* Thanh công cụ: Dán link ảnh từ mạng & Nút tải ảnh từ máy */}
+                  <div className={styles.subImagesActions}>
+                    <div className={styles.subUrlInputWrap}>
+                      <input
+                        type="url"
+                        placeholder="Dán link ảnh từ mạng (VD: https://images.unsplash.com/...)"
+                        value={newSubImageUrl}
+                        onChange={(e) => setNewSubImageUrl(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddSubImageUrl(e);
+                          }
+                        }}
+                        className={styles.subUrlInput}
+                      />
+                      <button
+                        type="button"
+                        className={styles.subAddUrlBtn}
+                        onClick={handleAddSubImageUrl}
+                        disabled={!newSubImageUrl.trim()}
+                      >
+                        <i className="fa-solid fa-plus" /> Thêm URL
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={styles.subUploadBtn}
+                      onClick={() => subFileInputRef.current?.click()}
+                      disabled={subImageUploadLoading}
+                    >
+                      <i className={subImageUploadLoading ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-cloud-arrow-up"} />
+                      {subImageUploadLoading ? 'Đang tải lên...' : 'Tải file từ máy'}
+                    </button>
+                    <input
+                      ref={subFileInputRef}
+                      type="file"
+                      multiple
+                      accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+                      style={{ display: 'none' }}
+                      onChange={handleSubFilesChange}
+                    />
+                  </div>
+
+                  {/* Lưới xem trước các ảnh phụ */}
+                  {subImages.length > 0 ? (
+                    <div className={styles.subImagesGrid}>
+                      {subImages.map((url, idx) => (
+                        <div key={`${url}-${idx}`} className={styles.subImageCard}>
+                          <img
+                            src={getProductImage(url, 160)}
+                            alt={`Ảnh phụ ${idx + 1}`}
+                            className={styles.subImageThumb}
+                          />
+                          <span className={styles.subImageIndex}>#{idx + 1}</span>
+                          <button
+                            type="button"
+                            className={styles.subImageDeleteBtn}
+                            onClick={() => handleRemoveSubImage(idx)}
+                            title="Gỡ ảnh phụ này"
+                          >
+                            <i className="fa-solid fa-xmark" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.subImagesEmpty}>
+                      <i className="fa-regular fa-image" />
+                      <span>Chưa có ảnh phụ nào. Bạn có thể dán link ảnh từ mạng hoặc tải file ảnh từ máy.</span>
                     </div>
                   )}
                 </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../../../context/useCart.js';
 import { ROUTES } from '../../../constants/routes.js';
@@ -19,6 +19,7 @@ function ProductDetail() {
   const { addItem, itemCount } = useCart();
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
   const [isSpecDrawerOpen, setIsSpecDrawerOpen] = useState(false);
@@ -113,6 +114,40 @@ function ProductDetail() {
       })
       .catch(() => {});
   }, [product]);
+
+  // Đồng bộ ảnh được chọn khi đổi sản phẩm
+  useEffect(() => {
+    if (product) {
+      setSelectedImage(product.image || (product.images && product.images[0]) || '');
+    }
+  }, [product]);
+
+  // Bộ sưu tập ảnh sản phẩm (ảnh chính thumbnail và các ảnh phụ)
+  const galleryImages = useMemo(() => {
+    if (!product) return [];
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      return product.images;
+    }
+    return product.image ? [product.image] : [];
+  }, [product]);
+
+  const activeImage = selectedImage || (galleryImages.length > 0 ? galleryImages[0] : product?.image);
+  const currentIndex = galleryImages.findIndex((img) => img === activeImage);
+  const activeIndex = currentIndex >= 0 ? currentIndex : 0;
+
+  const handlePrevImage = (e) => {
+    e.stopPropagation();
+    if (galleryImages.length <= 1) return;
+    const nextIdx = (activeIndex - 1 + galleryImages.length) % galleryImages.length;
+    setSelectedImage(galleryImages[nextIdx]);
+  };
+
+  const handleNextImage = (e) => {
+    e.stopPropagation();
+    if (galleryImages.length <= 1) return;
+    const nextIdx = (activeIndex + 1) % galleryImages.length;
+    setSelectedImage(galleryImages[nextIdx]);
+  };
 
   const addToCart = () => {
     if (!product) return;
@@ -246,6 +281,7 @@ function ProductDetail() {
     )
     : productSpecs;
 
+
   const standardInfo = [
     { label: 'Thương hiệu', value: product.brand || 'Khác' },
     { label: 'Phân loại', value: product.type || 'Thiết bị máy ảnh' },
@@ -258,7 +294,65 @@ function ProductDetail() {
     <div className={styles.page}>
       <div className={styles.breadcrumb}><Link to="/">Trang chủ</Link> / <Link to={ROUTES.products}>{product.brand || 'Sản phẩm'} {(product.type || '').toLowerCase()}</Link> / {product.name}</div>
       <div className={styles.product}>
-        <div className={styles.gallery}><span className={styles.galleryTag}>{product.badge || 'CHÍNH HÃNG'}</span><img src={getProductImage(product.image)} alt={product.name} /></div>
+        <div className={styles.galleryWrapper}>
+          <div className={styles.gallery}>
+            <span className={styles.galleryTag}>{product.badge || 'CHÍNH HÃNG'}</span>
+            <img
+              key={activeImage}
+              src={getProductImage(activeImage, 900)}
+              alt={`${product.name} - ảnh ${activeIndex + 1}`}
+              className={styles.mainImage}
+            />
+            {galleryImages.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  className={`${styles.navArrow} ${styles.prevArrow}`}
+                  onClick={handlePrevImage}
+                  aria-label="Xem ảnh trước"
+                  title="Ảnh trước"
+                >
+                  <i className="fa-solid fa-chevron-left" />
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.navArrow} ${styles.nextArrow}`}
+                  onClick={handleNextImage}
+                  aria-label="Xem ảnh kế tiếp"
+                  title="Ảnh kế tiếp"
+                >
+                  <i className="fa-solid fa-chevron-right" />
+                </button>
+                <span className={styles.imageCounter}>
+                  <i className="fa-regular fa-image" /> {activeIndex + 1} / {galleryImages.length}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Hàng ảnh con (thumbnails) chi tiết bên dưới ảnh chính */}
+          {galleryImages.length > 1 && (
+            <div className={styles.thumbnailList} role="tablist" aria-label="Danh sách ảnh góc chụp sản phẩm">
+              {galleryImages.map((img, idx) => {
+                const isActive = activeImage === img;
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`${styles.thumbnailItem} ${isActive ? styles.thumbnailActive : ''}`}
+                    onClick={() => setSelectedImage(img)}
+                    onMouseEnter={() => setSelectedImage(img)}
+                    title={`Xem góc chụp ${idx + 1}`}
+                  >
+                    <img src={getProductImage(img, 180)} alt={`${product.name} - góc ${idx + 1}`} />
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
         <section className={styles.details}><span className={styles.eyebrow}>{(product.brand || '').toUpperCase()} / {(product.type || '').toUpperCase()}</span><h1>{product.name}</h1><div className={styles.rating}>★★★★★ <small>{avgRating} · {reviews.length || product.reviews || 0} đánh giá</small></div><div className={styles.price}><strong>{formatPrice(product.price)}</strong>{product.oldPrice && <del>{formatPrice(product.oldPrice)}</del>}</div>
           {product.description ? (
             <div

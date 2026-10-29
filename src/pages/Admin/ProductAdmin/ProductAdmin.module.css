@@ -486,3 +486,242 @@
 :global(html[data-theme="light"]) .specsEmpty p {
   color: #1a271e;
 }
+
+/* ==========================================================================
+   Quản lý Ảnh phụ (Sub-images / Gallery)
+   ========================================================================== */
+.subImagesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
+.subImagesTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #eff2ec;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subImagesTitle i {
+  color: #a8f000;
+}
+
+.subImagesSubtitle {
+  display: block;
+  font-size: 10px;
+  color: #8c988e;
+  margin-top: 1px;
+}
+
+.subImagesBadge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(168, 240, 0, 0.12);
+  color: #a8f000;
+  border: 1px solid rgba(168, 240, 0, 0.25);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.subImagesActions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.subUrlInputWrap {
+  display: flex;
+  flex: 1;
+  min-width: 260px;
+  gap: 4px;
+}
+
+.subUrlInput {
+  flex: 1;
+  background: #141a15 !important;
+  border: 1px solid #313d33 !important;
+  color: #eff2ec !important;
+  font-size: 11px !important;
+  padding: 6px 10px !important;
+  border-radius: 4px !important;
+}
+
+.subUrlInput:focus {
+  border-color: #a8f000 !important;
+  outline: none;
+}
+
+.subAddUrlBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #1e2a20;
+  border: 1px solid #3e5241;
+  color: #a8f000;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.subAddUrlBtn:hover:not(:disabled) {
+  background: #27362a;
+  border-color: #a8f000;
+}
+
+.subAddUrlBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.subUploadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #151d16;
+  border: 1px dashed #405544;
+  color: #eff2ec;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.subUploadBtn:hover:not(:disabled) {
+  border-color: #a8f000;
+  color: #a8f000;
+  background: #1a251c;
+}
+
+.subUploadBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.subImagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.subImageCard {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #313d33;
+  background: #0d120e;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.subImageThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.subImageIndex {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #eff2ec;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.subImageDeleteBtn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: rgba(220, 38, 38, 0.85);
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  opacity: 0.9;
+}
+
+.subImageDeleteBtn:hover {
+  background: #ef4444;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.subImagesEmpty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+  border: 1px dashed #2b382d;
+  border-radius: 6px;
+  background: #111612;
+  color: #7b8c7e;
+  font-size: 11px;
+}
+
+.subImagesEmpty i {
+  font-size: 16px;
+  color: #556758;
+}
+
+:global(html[data-theme="light"]) .subImagesTitle {
+  color: #1a271e;
+}
+
+:global(html[data-theme="light"]) .subUrlInput {
+  background: #f8faf8 !important;
+  border-color: #d2ddd3 !important;
+  color: #1a271e !important;
+}
+
+:global(html[data-theme="light"]) .subAddUrlBtn {
+  background: #edf3ee;
+  border-color: #c5d4c7;
+  color: #2b7044;
+}
+
+:global(html[data-theme="light"]) .subUploadBtn {
+  background: #f4f7f4;
+  border-color: #c5d4c7;
+  color: #1a271e;
+}
+
+:global(html[data-theme="light"]) .subImageCard {
+  border-color: #d5ded6;
+  background: #ffffff;
+}
+
+:global(html[data-theme="light"]) .subImagesEmpty {
+  border-color: #d5ded6;
+  background: #f9fbf9;
+  color: #5c6e5e;
+}
+
